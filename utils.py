@@ -2,7 +2,7 @@ import numpy as np
 import math
 import random
 import os
-import cPickle as pickle
+import pickle
 import xml.etree.ElementTree as ET
 
 from utils import *
@@ -106,7 +106,7 @@ class DataLoader():
         for i in range(len(filelist)):
             if (filelist[i][-3:] == 'xml'):
                 stroke_file = filelist[i]
-#                 print 'processing '+stroke_file
+#                 print('processing '+stroke_file)
                 stroke = convert_stroke_to_array(getStrokes(stroke_file))
                 
                 ascii_file = stroke_file.replace("lineStrokes","ascii")[:-7] + ".txt"
@@ -128,7 +128,7 @@ class DataLoader():
 
     def load_preprocessed(self, data_file):
         f = open(data_file,"rb")
-        [self.raw_stroke_data, self.raw_ascii_data] = pickle.load(f)
+        [self.raw_stroke_data, self.raw_ascii_data] = pickle.load(f, encoding='latin1')
         f.close()
 
         # goes thru the list, and only keeps the text entries that have more than tsteps points
@@ -182,7 +182,7 @@ class DataLoader():
         x_batch = []
         y_batch = []
         ascii_list = []
-        for i in xrange(self.batch_size):
+        for i in range(self.batch_size):
             data = self.stroke_data[self.idx_perm[self.pointer]]
             idx = random.randint(0, len(data)-self.tsteps-2)
             x_batch.append(np.copy(data[:self.tsteps]))
@@ -203,6 +203,7 @@ class DataLoader():
 # utility function for converting input ascii characters into vectors the network can understand.
 # index position 0 means "unknown"
 def to_one_hot(s, ascii_steps, alphabet):
+    ascii_steps = int(ascii_steps)
     steplimit=3e3; s = s[:3e3] if len(s) > 3e3 else s # clip super-long strings
     seq = [alphabet.find(char) + 1 for char in s]
     if len(seq) >= ascii_steps:
@@ -221,6 +222,6 @@ class Logger():
 
     def write(self, s, print_it=True):
         if print_it:
-            print s
+            print(s)
         with open(self.logf, 'a') as f:
             f.write(s + "\n")

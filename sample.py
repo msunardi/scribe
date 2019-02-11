@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-import cPickle as pickle
+import pickle
 
 from utils import *
 
@@ -25,7 +25,7 @@ def get_style_states(model, args):
     style_kappa = np.zeros((1, args.kmixtures, 1))
     prime_len = 500 # must be <= 700
     
-    for i in xrange(prime_len):
+    for i in range(prime_len):
         style_stroke[0][0] = style_strokes[i,:]
         feed = {model.input_data: style_stroke, model.char_seq: style_onehot, model.init_kappa: style_kappa, \
                 model.istate_cell0.c: c0, model.istate_cell1.c: c1, model.istate_cell2.c: c2, \
@@ -65,7 +65,7 @@ def sample(input_text, model, args):
         
         # choose a component from the MDN
         idx = np.random.choice(pi.shape[1], p=pi[0])
-	eos = 1 if 0.35 < eos[0][0] else 0 # use 0.5 as arbitrary boundary
+        eos = 1 if 0.35 < eos[0][0] else 0 # use 0.5 as arbitrary boundary
         x1, x2 = sample_gaussian2d(mu1[0][idx], mu2[0][idx], sigma1[0][idx], sigma2[0][idx], rho[0][idx])
             
         # store the info at this time step
