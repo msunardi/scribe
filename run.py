@@ -75,7 +75,15 @@ def train_model(args):
 	model.sess.run(tf.assign(model.decay, args.decay ))
 	model.sess.run(tf.assign(model.momentum, args.momentum ))
 	running_average = 0.0 ; remember_rate = 0.99
-	for e in range(global_step/args.nbatches, args.nepochs):
+
+	# Somehow these values were in float?
+	global_step = int(global_step)
+	args.nbatches = int(args.nbatches)
+	args.nepochs = int(args.nepochs)
+	step_per_batch = int(global_step/args.nbatches)
+	epochs = int(args.nepochs)
+	
+	for e in range(step_per_batch, epochs):
 		model.sess.run(tf.assign(model.learning_rate, args.learning_rate * (args.lr_decay ** e)))
 		logger.write("learning rate: {}".format(model.learning_rate.eval()))
 

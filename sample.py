@@ -1,7 +1,8 @@
 import numpy as np
 import tensorflow as tf
-import cPickle as pickle
+# import cPickle as pickle
 
+import pickle
 from utils import *
 
 def sample_gaussian2d(mu1, mu2, s1, s2, rho):
@@ -65,7 +66,7 @@ def sample(input_text, model, args):
         
         # choose a component from the MDN
         idx = np.random.choice(pi.shape[1], p=pi[0])
-	eos = 1 if 0.35 < eos[0][0] else 0 # use 0.5 as arbitrary boundary
+        eos = 1 if 0.35 < eos[0][0] else 0 # use 0.5 as arbitrary boundary
         x1, x2 = sample_gaussian2d(mu1[0][idx], mu2[0][idx], sigma1[0][idx], sigma2[0][idx], rho[0][idx])
             
         # store the info at this time step
